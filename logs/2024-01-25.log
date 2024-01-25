@@ -1,0 +1,11 @@
+2024-01-25 08:58:09,002 autoreload 15728 22812 INFO Watching for file changes with StatReloader
+2024-01-25 08:59:05,842 autoreload 8628 17300 INFO Watching for file changes with StatReloader
+2024-01-25 08:59:26,197 autoreload 21440 10768 INFO Watching for file changes with StatReloader
+2024-01-25 09:00:14,420 autoreload 15048 6436 INFO Watching for file changes with StatReloader
+2024-01-25 09:00:32,164 autoreload 15048 6436 INFO H:\Usuários\Codes\Alppi\Microservice_1\api\v1\apps.py changed, reloading.
+2024-01-25 09:00:32,733 autoreload 13180 18472 INFO Watching for file changes with StatReloader
+2024-01-25 09:00:34,027 autoreload 13180 18472 INFO H:\Usuários\Codes\Alppi\Microservice_1\api\v1\apps.py changed, reloading.
+2024-01-25 09:00:34,640 autoreload 16420 8560 INFO Watching for file changes with StatReloader
+2024-01-25 09:00:38,423 basehttp 16420 8552 INFO "GET / HTTP/1.1" 200 10629
+2024-01-25 09:00:38,641 log 16420 8552 WARNING Not Found: /favicon.ico
+2024-01-25 09:00:38,641 basehttp 16420 8552 WARNING "GET /favicon.ico HTTP/1.1" 404 2110
