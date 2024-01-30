@@ -44,13 +44,16 @@ CUSTOM_APPS = [
 ]
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    # 'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-] + CUSTOM_APPS
+    # 'django.contrib.sessions',
+    # 'django.contrib.messages',
+    # 'django.contrib.staticfiles',
+    'rest_framework',
+    'api.v1',
+    'apps.authentication'
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -89,12 +92,20 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     "default": {
-        "ENGINE": os.getenv('DB_ENGINE'),
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT')
+        "ENGINE": os.getenv('DB_ENGINE_1'),
+        'NAME': os.getenv('DB_NAME_1'),
+        'USER': os.getenv('DB_USER_1'),
+        'PASSWORD': os.getenv('DB_PASSWORD_1'),
+        'HOST': os.getenv('DB_HOST_1'),
+        'PORT': os.getenv('DB_PORT_1')
+    },
+    "database_2": {
+        "ENGINE": os.getenv('DB_ENGINE_2'),
+        'NAME': os.getenv('DB_NAME_2'),
+        'USER': os.getenv('DB_USER_2'),
+        'PASSWORD': os.getenv('DB_PASSWORD_2'),
+        'HOST': os.getenv('DB_HOST_2'),
+        'PORT': os.getenv('DB_PORT_2')
     }
 }
 
