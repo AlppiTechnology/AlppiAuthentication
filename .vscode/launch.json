@@ -1,0 +1,17 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "MS1",
+            "type": "python",
+            "request": "launch",
+            "program": "H:/Usuários/Codes/Alppi/Microservice_1/manage.py",
+            "args": ["runserver", "7001"],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        }
+    ]
+}
