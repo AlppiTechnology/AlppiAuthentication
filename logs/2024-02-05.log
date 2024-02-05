@@ -1,0 +1,21 @@
+2024-02-05 08:22:01,448 autoreload 21676 14416 INFO Watching for file changes with StatReloader
+2024-02-05 08:22:54,310 autoreload 8488 1496 INFO Watching for file changes with StatReloader
+2024-02-05 08:22:58,307 query_user 8488 2372 INFO Criando cursor no banco de dados
+2024-02-05 08:22:58,327 query_user 8488 2372 INFO Executando query user_infos
+2024-02-05 08:22:58,327 query_user 8488 2372 INFO Cursor do banco fechado
+2024-02-05 08:22:58,646 query_user 8488 2372 INFO Atualizando ultima acesso do usuario.
+2024-02-05 08:22:58,646 query_user 8488 2372 INFO Criando cursor no banco de dados
+2024-02-05 08:22:58,679 query_user 8488 2372 INFO E xecutando query user_update_last_access
+2024-02-05 08:22:58,679 query_user 8488 2372 INFO Cursor do banco fechado
+2024-02-05 08:22:59,072 basehttp 8488 2372 INFO "POST /ms1/api/v1/user/login HTTP/1.1" 200 938
+2024-02-05 08:27:07,207 autoreload 8488 1496 INFO H:\Usuários\Codes\Alppi\Microservice_1\config\settings.py changed, reloading.
+2024-02-05 08:27:07,912 autoreload 9708 12900 INFO Watching for file changes with StatReloader
+2024-02-05 09:26:15,094 autoreload 22428 7196 INFO Watching for file changes with StatReloader
+2024-02-05 09:26:21,343 query_user 22428 21936 INFO Criando cursor no banco de dados
+2024-02-05 09:26:21,362 query_user 22428 21936 INFO Executando query user_infos
+2024-02-05 09:26:21,363 query_user 22428 21936 INFO Cursor do banco fechado
+2024-02-05 09:26:21,600 query_user 22428 21936 INFO Atualizando ultima acesso do usuario.
+2024-02-05 09:26:21,600 query_user 22428 21936 INFO Criando cursor no banco de dados
+2024-02-05 09:26:21,604 query_user 22428 21936 INFO E xecutando query user_update_last_access
+2024-02-05 09:26:21,605 query_user 22428 21936 INFO Cursor do banco fechado
+2024-02-05 09:26:21,959 basehttp 22428 21936 INFO "POST /ms1/api/v1/user/login HTTP/1.1" 200 938

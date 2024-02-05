@@ -36,13 +36,6 @@ ALLOWED_HOSTS = [
     if host.strip()]
 
 
-# Application definition
-CUSTOM_APPS = [
-    'rest_framework',
-    'api.v1',
-    'apps.authentication'
-]
-
 INSTALLED_APPS = [
     # 'django.contrib.admin',
     'django.contrib.auth',
