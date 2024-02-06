@@ -11,10 +11,13 @@ from rest_framework.response import Response
 from apps.authentication.query.query_campus import get_campus_cnpj
 from common.jwt.jwt_encrypt import encrypt_jwt_modules
 
+from src.systemModules.systema_modules import SystemModules
+
 ALPPI_INTRANET = os.getenv('ALPPI_INTRANET')
 
 
 logger = logging.getLogger('django')
+
 
 class UpdateSystemModules(APIView):
 
@@ -42,8 +45,6 @@ class UpdateSystemModules(APIView):
             message = f'Erro na requisição. {response.text.results}'
             return Response({'results': message}, status=status.HTTP_400_BAD_REQUEST)
 
-
-
     # def get(self, request, format=None):
 
     #     try:
@@ -62,34 +63,3 @@ class UpdateSystemModules(APIView):
     #     except Exception as e:
     #         logger.error(e)
     #         return Response({'results': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
-
-class SystemModules:
-
-
-    def get_modules(self) -> str:
-        if os.path.exists('./alppi.key'):
-
-            alppi_key: str = './alppi.key'
-            with open(alppi_key, 'r') as arquivo:
-                # Carregar o conteúdo do arquivo JSON
-                modules_jwt = arquivo.read()
-
-            return modules_jwt
-        
-        else:
-            return None
-        
-    def set_modules(self, jwt_modules: str) -> str:
-        try:
-            if os.path.exists('./alppi.key'):
-
-                alppi_key: str = './alppi.key'
-                with open(alppi_key, 'w') as arquivo:
-                    # Carregar o conteúdo do arquivo JSON
-                    arquivo.write(jwt_modules)
-                    return 'Modulos Atualizados com sucesso'
-
-        except Exception as e:
-            return f'Erro ao atualizar modulos: {e}'
-            
