@@ -10,6 +10,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 
 from apps.authentication.query.query_user import user_infos, user_update_last_access
+from apps.authentication.modules.views import SystemModules
 from common.criptografy.hash_password import veryfy_pass
 from common.criptografy.jwt_encrypt import create_jwt_pass
 
@@ -62,10 +63,16 @@ class LoginView(APIView):
                 }
 
                 user_jwt = create_jwt_pass(token_information)
-                message = 'Gurpo de acesso autorizado!'
+                message = 'Usuario autorizado!'
                 logger.debug({'results': message})
+
+
+                # Capturando Modulos de acesso da Empresa
+                system_modules = SystemModules().get_modules()
+
                 return JsonResponse(
-                    {'user_access': user_jwt, }, status=status.HTTP_200_OK)
+                    {'user_access': user_jwt, 
+                     'system_modules': system_modules}, status=status.HTTP_200_OK)
 
         except Exception as error:
             message = 'Problemas do servidor ao autenticar usuario.'
