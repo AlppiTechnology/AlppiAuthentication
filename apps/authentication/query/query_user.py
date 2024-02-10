@@ -13,7 +13,7 @@ logger = logging.getLogger('django')
 
 def user_infos(data) -> tuple:
 
-    query = 'SELECT u.pk_user, u.full_name, u.password, u.status, '\
+    query = 'SELECT u.pk_user, u.username, u.password, u.is_active, '\
         'cp.campus_code, cp.pk_campus '\
         'FROM tb_user as u '\
         'LEFT JOIN tb_campus as cp on cp.pk_campus=u.fk_campus '\
@@ -31,7 +31,7 @@ def user_infos(data) -> tuple:
         if row:
             return_query = {
                 'pk_user': row[0],
-                'full_name': row[1],
+                'username': row[1],
                 'password': row[2],
                 'status': row[3],
                 'campus_code': row[4],
@@ -57,9 +57,9 @@ def user_infos(data) -> tuple:
         logger.info('Cursor do banco fechado')
 
 
-def user_update_last_access(id) -> tuple:
+def user_update_last_login(id) -> tuple:
     logger.info('Atualizando ultima acesso do usuario.')
-    query = 'UPDATE tb_user SET last_access = %s '\
+    query = 'UPDATE tb_user SET last_login = %s '\
         'WHERE  pk_user = %s '
     vars_query = (datetime.now(), str(id))
 
