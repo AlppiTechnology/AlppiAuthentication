@@ -35,20 +35,31 @@ ALLOWED_HOSTS = [
     host.strip() for host in os.getenv('ALLOWED_HOSTS', '').split(',') 
     if host.strip()]
 
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost',
+    'http://127.0.0.1',
+    'http://0.0.0.0',
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
 
 INSTALLED_APPS = [
     # 'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
-    # 'django.contrib.sessions',
-    # 'django.contrib.messages',
-    # 'django.contrib.staticfiles',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'corsheaders',
     'rest_framework',
     'api.v1',
-    'apps.authentication'
+    'apps.authentication',
+    'apps.register'
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -152,8 +163,15 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 30,
     'DATETIME_FORMAT': "%Y-%m-%dT%H:%M:%S",
     'DATE_FORMAT':'%Y-%m-%d',
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+    ),
 }
 
+AUTH_USER_MODEL = "register.User"
 
 
 # Password validation
