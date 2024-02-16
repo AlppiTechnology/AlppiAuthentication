@@ -6,6 +6,9 @@ from apps.authentication.modules import views as modulesviews
 
 
 urlpatterns = [
+    path('user/login/', loginviewsets.UserLogin.as_view(), name='login'),
+    path('user/logout/', loginviewsets.UserLogout.as_view(), name='login'),
+
     path('teste/', loginviewsets.Teste.as_view(), name='teste'),
 
     path('login/', loginviewsets.LoginView.as_view(), name='teste'),

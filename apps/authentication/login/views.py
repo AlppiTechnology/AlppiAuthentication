@@ -22,14 +22,46 @@ logger = logging.getLogger('django')
 brasil_tz = pytz.timezone('America/Sao_Paulo')
 
 
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from apps.authentication.login.validations import  validate_registration, validate_password
 from rest_framework import status
 
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.permissions import DjangoModelPermissions
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from apps.authentication.login.validations import  validate_registration, validate_password
+from django.contrib.auth import login, logout
+from apps.authentication.login.serializer import  UserLoginSerializer, UserSerializer
+from rest_framework import permissions, status
+
+class UserLogin(APIView):
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = (SessionAuthentication,)
+    ##
+    def post(self, request):
+        data = request.data
+        assert validate_registration(data)
+        assert validate_password(data)
+        serializer = UserLoginSerializer(data=data)
+        if serializer.is_valid(raise_exception=True):
+            user = serializer.check_user(data)
+            login(request, user)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class UserLogout(APIView):
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = ()
+    def post(self, request):
+        logout(request)
+        return Response(status=status.HTTP_200_OK)
+    
 
 class Teste(APIView):
+    authentication_classes = (SessionAuthentication,)
+    permission_classes = (DjangoModelPermissions,)
 
     def get(request, pk, format=None, *args, **kwargs):
 
