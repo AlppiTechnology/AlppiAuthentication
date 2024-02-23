@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+from datetime import timedelta
 from datetime import date
 from dotenv import load_dotenv
 from pathlib import Path
@@ -35,24 +36,31 @@ ALLOWED_HOSTS = [
     host.strip() for host in os.getenv('ALLOWED_HOSTS', '').split(',') 
     if host.strip()]
 
-
-# Application definition
-CUSTOM_APPS = [
-    'rest_framework',
-    'api.v1',
-    'apps.authentication'
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost',
+    'http://127.0.0.1',
+    'http://0.0.0.0',
 ]
 
+CORS_ALLOW_CREDENTIALS = True
+
+
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    # 'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-] + CUSTOM_APPS
+    'corsheaders',
+    'rest_framework',
+    'api.v1',
+    'apps.authentication',
+    'apps.register'
+]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -89,12 +97,20 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     "default": {
-        "ENGINE": os.getenv('DB_ENGINE'),
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT')
+        "ENGINE": os.getenv('DB_ENGINE_1'),
+        'NAME': os.getenv('DB_NAME_1'),
+        'USER': os.getenv('DB_USER_1'),
+        'PASSWORD': os.getenv('DB_PASSWORD_1'),
+        'HOST': os.getenv('DB_HOST_1'),
+        'PORT': os.getenv('DB_PORT_1')
+    },
+    "database_2": {
+        "ENGINE": os.getenv('DB_ENGINE_2'),
+        'NAME': os.getenv('DB_NAME_2'),
+        'USER': os.getenv('DB_USER_2'),
+        'PASSWORD': os.getenv('DB_PASSWORD_2'),
+        'HOST': os.getenv('DB_HOST_2'),
+        'PORT': os.getenv('DB_PORT_2')
     }
 }
 
@@ -150,6 +166,7 @@ REST_FRAMEWORK = {
     'DATE_FORMAT':'%Y-%m-%d',
 }
 
+AUTH_USER_MODEL = "register.User"
 
 
 # Password validation
@@ -169,7 +186,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
