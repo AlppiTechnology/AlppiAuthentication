@@ -8,13 +8,13 @@ from functools import wraps
 from rest_framework import status
 from alppi.jwt.jwt_encrypt import decrypt_jwt_pass
 from django.http import JsonResponse
-from django.contrib.auth.backends import ModelBackend
 
 from common.systemModules.system_modules import SystemModules
 
 
 
 logger = logging.getLogger('django')
+
 
 
 def jwt_verifier(function):
@@ -88,6 +88,23 @@ def jwt_verifier(function):
     return wrapper
 
 def load_system_modules(function):
+    """
+    Decorador para carregar informações dos módulos disponíveis no sistema e adicioná-los à requisição.
+
+    Este decorador cria uma instância de `SystemModules`, obtém os módulos disponíveis e decodifica
+    as informações. Em seguida, adiciona os módulos à requisição antes de chamar a função original.
+
+    Parâmetros:
+    - function: A função original que será decorada.
+
+    Retorna:
+    function: Uma função decorada que carrega os módulos do sistema antes de chamar a função original.
+
+    Exceções:
+    - JsonResponse: Retorna uma resposta JSON com uma mensagem de erro e status HTTP 500
+      em caso de problemas ao carregar informações dos módulos disponíveis do sistema.
+
+    """
 
     @wraps(function)
     def wrapper(request, *args, **kwargs):
@@ -111,11 +128,46 @@ def load_system_modules(function):
     return wrapper
 
 def permission_model_required(model=None):
+    """
+    Decorador para adicionar o modelo (model) à requisição como parte da verificação de permissão.
+
+    Este decorador adiciona o modelo fornecido à requisição antes de chamar a função original.
+    O modelo pode ser utilizado posteriormente para verificar permissões específicas na função decorada.
+
+    Parâmetros:
+    - model (str): O nome do modelo (opcional). Se não fornecido, o valor padrão é None.
+
+    Retorna:
+    function: Uma função decorada que adiciona o modelo à requisição.
+    """
     def decorator(function):
         @wraps(function)
         def wrapper(request, *args, **kwargs):
         
             request.model_perm = model.lower()
+
+            return function(request=request, *args, **kwargs)
+        return wrapper
+    return decorator
+
+def permission_required(permission=None):
+    """
+    Decorador para adicionar a permissão necessária à requisição como parte da verificação de permissão.
+
+    Este decorador adiciona a permissão fornecida à requisição antes de chamar a função original.
+    A permissão pode ser utilizada posteriormente para verificar permissões específicas na função decorada.
+
+    Parâmetros:
+    - permission (str): A permissão necessária (opcional). Se não fornecido, o valor padrão é None.
+
+    Retorna:
+    function: Uma função decorada que adiciona a permissão à requisição.
+    """
+    def decorator(function):
+        @wraps(function)
+        def wrapper(request, *args, **kwargs):
+
+            request.permission_required = permission
 
             return function(request=request, *args, **kwargs)
         return wrapper

@@ -18,8 +18,26 @@ from alppi.jwt.jwt_encrypt import decrypt_jwt_pass
 logger = logging.getLogger('django')
 
 class JwtAutenticationAlppi(BaseAuthentication):
+    """
+    Autenticação JWT para a aplicação Alppi.
+
+    Esta classe implementa a autenticação baseada em JWT (JSON Web Token) para a aplicação Alppi,
+    utilizando BaseAuthentication do Django REST Framework.
+
+    Métodos:
+    - authenticate(request): Realiza a autenticação com base no token JWT presente no cabeçalho 'Authorization'
+      da requisição.
+
+    Exceções:
+    - NotAuthenticated: Lançada se não houver token no cabeçalho da requisição.
+    - PermissionDenied: Lançada se o token estiver expirado.
+    - AuthenticationFailed: Lançada se ocorrerem problemas na decodificação do token.
+
+    Atributos:
+    - AUTHORIZATION: Nome da chave do cabeçalho utilizado para o token.
+    """
     
-    def authenticate(self, request):
+    def authenticate(self, request) -> None:
     
         AUTHORIZATION = request.headers.get('Authorization')
 
