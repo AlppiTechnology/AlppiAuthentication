@@ -12,6 +12,7 @@ urlpatterns = [
     path('teste/', loginviewsets.Teste.as_view(), name='teste'),
 
     path('login/', loginviewsets.LoginView.as_view(), name='teste'),
+    path('login_group/', loginviewsets.LoginGroupView.as_view(), name='teste'),
     
     path('modules/update/', modulesviews.UpdateSystemModules.as_view(), name='upd_modules'),
 ]

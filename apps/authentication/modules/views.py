@@ -9,7 +9,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from apps.authentication.query.query_campus import get_campus_cnpj
-from common.jwt.jwt_encrypt import encrypt_jwt_modules
+from alppi.jwt.jwt_encrypt import encrypt_jwt_modules
 
 from src.systemModules.systema_modules import SystemModules
 
@@ -44,22 +44,3 @@ class UpdateSystemModules(APIView):
         else:
             message = f'Erro na requisição. {response.text.results}'
             return Response({'results': message}, status=status.HTTP_400_BAD_REQUEST)
-
-    # def get(self, request, format=None):
-
-    #     try:
-    #         if os.path.exists('./alppi.key'):
-
-    #             alppi_key = './alppi.key'
-    #             with open(alppi_key, 'r') as arquivo:
-    #                 # Carregar o conteúdo do arquivo JSON
-    #                 modules_jwt = arquivo.read()
-    #                 return Response({'results': modules_jwt}, status=status.HTTP_200_OK)
-
-    #         else:
-    #             message = 'Entre em contato com o a instituiçao para relatar o problema.'
-    #             return Response({'results': message}, status=status.HTTP_401_UNAUTHORIZED)
-
-    #     except Exception as e:
-    #         logger.error(e)
-    #         return Response({'results': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
