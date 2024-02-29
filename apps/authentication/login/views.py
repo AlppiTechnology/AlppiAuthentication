@@ -81,7 +81,6 @@ class LoginView(APIView):
             assert validate_password(data)
 
             user_credentials, has_error = user_infos(data)
-
             if has_error:
                 return has_error
 
@@ -104,12 +103,14 @@ class LoginView(APIView):
                 else:
                     ip_address = request.META.get('REMOTE_ADDR')
 
-
-                groups, error = get_user_group_info(user_credentials.get('pk_user'))
-                if error:
-                    return error
-                
-                group = validate_level_group(groups)
+                if user_credentials.get('is_superuser') or user_credentials.get('is_superuser'):
+                    group = 'superuser'
+                else:
+                    groups, error = get_user_group_info(user_credentials.get('pk_user'))
+                    if error:
+                        return error
+                    
+                    group = validate_level_group(groups)
 
                 token_information = {
                     'pk_user': user_credentials.get('pk_user'),
@@ -131,7 +132,7 @@ class LoginView(APIView):
                 # Capturando Modulos de acesso da Empresa
                 system_modules = SystemModules().get_modules()
 
-                return JsonResponse({'jwt_group': user_jwt, 
+                return JsonResponse({'user_access': user_jwt, 
                      'system_modules': system_modules}, status=status.HTTP_200_OK)
 
             message = 'Credenciais incorretas!'

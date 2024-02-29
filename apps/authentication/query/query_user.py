@@ -14,7 +14,7 @@ logger = logging.getLogger('django')
 def user_infos(data) -> tuple:
 
     query = 'SELECT u.pk_user, u.username, u.password, u.is_active, '\
-        'cp.campus_code, cp.pk_campus '\
+        'cp.campus_code, cp.pk_campus, u.is_superuser,  u.is_staff '\
         'FROM tb_user as u '\
         'LEFT JOIN tb_campus as cp on cp.pk_campus=u.fk_campus '\
         'WHERE u.registration = %s '
@@ -35,7 +35,9 @@ def user_infos(data) -> tuple:
                 'password': row[2],
                 'status': row[3],
                 'campus_code': row[4],
-                'pk_campus': row[5]
+                'pk_campus': row[5],
+                'is_superuser': row[6],
+                'is_staff': row[7]
             }
             return (return_query, None)
 
