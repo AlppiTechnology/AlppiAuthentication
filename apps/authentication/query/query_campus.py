@@ -1,12 +1,9 @@
 #!/usr/bin/python
 # -*- encoding: utf-8 -*-
-from django.db import connection
-from rest_framework import status
-from django.http import JsonResponse
 import logging
-import pytz
 
-from datetime import datetime
+from django.db import connection
+from alppi.responses import ResponseHelper
 
 logger = logging.getLogger('django')
 
@@ -25,10 +22,8 @@ def get_campus_cnpj() -> tuple:
 
     except Exception as error:
         message = 'Problemas do servidor ao atualizar acesso do usuario.'
-        logger.info({'results': message})
-        logger.error(error)
-        return (None, JsonResponse(data={'results': message},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR))
+        logger.error({'results': message, 'error:': str(error)})
+        return (None, ResponseHelper.HTTP_500({'results': message, 'error:': str(error)}))
 
     finally:
         cursor.close()

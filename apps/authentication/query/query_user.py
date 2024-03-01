@@ -8,6 +8,8 @@ import pytz
 
 from datetime import datetime
 
+from alppi.responses import ResponseHelper
+
 logger = logging.getLogger('django')
 
 
@@ -43,16 +45,12 @@ def user_infos(data) -> tuple:
 
         message = 'Este usuario não existe!'
         logger.error({'results': message})
-        return (None, JsonResponse({
-            'results': message,
-        }, status=status.HTTP_400_BAD_REQUEST))
+        return (None, ResponseHelper.HTTP_400({'results': message}))
 
     except Exception as error:
         message = 'Problemas do servidor ao autenticar usuario.'
-        logger.info({'results': message})
-        logger.error(error)
-        return None, JsonResponse(data={'results': message},
-                                  status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        logger.error({'results': message, 'error:': str(error)})
+        return (None, ResponseHelper.HTTP_500({'results': message, 'error:': str(error)}))
 
     finally:
         cursor.close()
@@ -69,16 +67,14 @@ def user_update_last_login(id) -> tuple:
         logger.info('Criando cursor no banco de dados')
         with connection.cursor() as cursor:
             cursor.execute(query, vars_query)
-            logger.info('E xecutando query user_update_last_access')
+            logger.info('Executando query user_update_last_access')
 
         return (True, None)
 
     except Exception as error:
         message = 'Problemas do servidor ao atualizar acesso do usuario.'
-        logger.info({'results': message})
-        logger.error(error)
-        return (None, JsonResponse(data={'results': message},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR))
+        logger.error({'results': message, 'error:': str(error)})
+        return (None, ResponseHelper.HTTP_500({'results': message, 'error:': str(error)}))
 
     finally:
         cursor.close()

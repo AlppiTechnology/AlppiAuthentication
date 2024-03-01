@@ -4,20 +4,19 @@ import logging
 import pytz
 import os
 
-
 from datetime import datetime, timedelta
 from django.http import JsonResponse, JsonResponse
 from django.contrib.auth.hashers import check_password
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import login
 from rest_framework import status
 from rest_framework.views import APIView
-from alppi.auth.authentication import JwtAutenticationAlppi
-from alppi.auth.permissions import IsAuthenticatedAlppi, IsViewAllowed
-from apps.authentication.query.query_group import get_user_group_info
 
+from alppi.responses import ResponseHelper
+from alppi.auth.authentication import JwtAutenticationAlppi
+from alppi.jwt.jwt_encrypt  import create_jwt_pass
+from apps.authentication.query.query_group import get_user_group_info
 from apps.authentication.query.query_user import user_infos, user_update_last_login
 from apps.authentication.modules.views import SystemModules
-from alppi.jwt.jwt_encrypt  import create_jwt_pass
 
 JWT_TOKEN_VALIDATE = os.getenv('JWT_TOKEN_VALIDATE', '5')
 
@@ -25,18 +24,14 @@ logger = logging.getLogger('django')
 brasil_tz = pytz.timezone('America/Sao_Paulo')
 
 
-from rest_framework.response import Response
-from rest_framework.views import APIView
+# ---- Imports para Logind com Django:
 from apps.authentication.login.validations import  validate_level_group, validate_registration, validate_password
-from rest_framework import status
+from apps.authentication.login.serializer import  UserLoginSerializer
+from django.contrib.auth import login, logout
 
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import DjangoModelPermissions
 from rest_framework.response import Response
-from rest_framework.views import APIView
-from apps.authentication.login.validations import  validate_registration, validate_password
-from django.contrib.auth import login, logout
-from apps.authentication.login.serializer import  UserLoginSerializer, UserSerializer
 from rest_framework import permissions, status
 
 class UserLogin(APIView):
@@ -72,7 +67,7 @@ class Teste(APIView):
 
 class LoginView(APIView):
 
-    def post(self, request, format=None):
+    def post(self, request, format=None) -> ResponseHelper:
 
         try:
             data = request.data
@@ -87,8 +82,8 @@ class LoginView(APIView):
             if user_credentials.get('status') == False:
                 message = 'Usuario Bloqueado!'
                 logger.debug({'results': message})
-                return JsonResponse(data={'results': message},
-                                    status=status.HTTP_401_UNAUTHORIZED)
+                return ResponseHelper.HTTP_403({'results': message})
+
             
             if check_password(data.get('password'), user_credentials.get('password')):
                 logger.debug('Usuario autorizado')
@@ -131,24 +126,23 @@ class LoginView(APIView):
 
                 # Capturando Modulos de acesso da Empresa
                 system_modules = SystemModules().get_modules()
+                
+                return ResponseHelper.HTTP_200({'user_access': user_jwt, 
+                                        'system_modules': system_modules})
 
-                return JsonResponse({'user_access': user_jwt, 
-                     'system_modules': system_modules}, status=status.HTTP_200_OK)
 
             message = 'Credenciais incorretas!'
             logger.debug({'results':message})
-            return JsonResponse(data={'results':message}, 
-                                status=status.HTTP_401_UNAUTHORIZED)
+            return ResponseHelper.HTTP_401({'results': message})
+
         
         except Exception as error:
             message = 'Problemas do servidor ao autenticar usuario.'
-            logger.debug({'results': message})
-            logger.error(error)
-            return JsonResponse(data={'results': message, 'error': str(error)},
-                                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            logger.error({'results': message, 'error:': str(error)})
+            return ResponseHelper.HTTP_500({'results': message, 'error:': str(error)})
 
 class LoginGroupView(APIView):
     authentication_classes = [JwtAutenticationAlppi]
 
     def post(self, request, format=None):
-        return JsonResponse({'results': 'rota obsoleta'}, status=status.HTTP_200_OK)
+        return ResponseHelper.HTTP_200({'results': 'rota obsoleta'})
