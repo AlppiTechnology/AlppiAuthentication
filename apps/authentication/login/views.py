@@ -11,10 +11,13 @@ from django.contrib.auth.hashers import check_password
 from django.contrib.auth import authenticate, login
 from rest_framework import status
 from rest_framework.views import APIView
+from alppi.auth.authentication import JwtAutenticationAlppi
+from alppi.auth.permissions import IsAuthenticatedAlppi, IsViewAllowed
+from apps.authentication.query.query_group import get_user_group_info
 
 from apps.authentication.query.query_user import user_infos, user_update_last_login
 from apps.authentication.modules.views import SystemModules
-from common.criptografy.jwt_encrypt import create_jwt_pass
+from alppi.jwt.jwt_encrypt  import create_jwt_pass
 
 JWT_TOKEN_VALIDATE = os.getenv('JWT_TOKEN_VALIDATE', '5')
 
@@ -24,7 +27,7 @@ brasil_tz = pytz.timezone('America/Sao_Paulo')
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from apps.authentication.login.validations import  validate_registration, validate_password
+from apps.authentication.login.validations import  validate_level_group, validate_registration, validate_password
 from rest_framework import status
 
 from rest_framework.authentication import SessionAuthentication
@@ -78,7 +81,6 @@ class LoginView(APIView):
             assert validate_password(data)
 
             user_credentials, has_error = user_infos(data)
-
             if has_error:
                 return has_error
 
@@ -101,6 +103,15 @@ class LoginView(APIView):
                 else:
                     ip_address = request.META.get('REMOTE_ADDR')
 
+                if user_credentials.get('is_superuser') or user_credentials.get('is_superuser'):
+                    group = 'superuser'
+                else:
+                    groups, error = get_user_group_info(user_credentials.get('pk_user'))
+                    if error:
+                        return error
+                    
+                    group = validate_level_group(groups)
+
                 token_information = {
                     'pk_user': user_credentials.get('pk_user'),
                     'registration': data.get('registration'),
@@ -109,6 +120,7 @@ class LoginView(APIView):
                     'campus_code': user_credentials.get('campus_code'),
                     'pk_campus': user_credentials.get('pk_campus'),
                     'ip_adress': ip_address,
+                    'group':group,
                     'exp': datetime.now() + timedelta(hours=int(JWT_TOKEN_VALIDATE))
                 }
 
@@ -120,8 +132,7 @@ class LoginView(APIView):
                 # Capturando Modulos de acesso da Empresa
                 system_modules = SystemModules().get_modules()
 
-                return JsonResponse(
-                    {'user_access': user_jwt, 
+                return JsonResponse({'user_access': user_jwt, 
                      'system_modules': system_modules}, status=status.HTTP_200_OK)
 
             message = 'Credenciais incorretas!'
@@ -132,7 +143,12 @@ class LoginView(APIView):
         except Exception as error:
             message = 'Problemas do servidor ao autenticar usuario.'
             logger.debug({'results': message})
-            logger.error(message)
             logger.error(error)
             return JsonResponse(data={'results': message, 'error': str(error)},
                                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class LoginGroupView(APIView):
+    authentication_classes = [JwtAutenticationAlppi]
+
+    def post(self, request, format=None):
+        return JsonResponse({'results': 'rota obsoleta'}, status=status.HTTP_200_OK)
