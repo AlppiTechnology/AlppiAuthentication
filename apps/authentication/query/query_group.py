@@ -8,6 +8,8 @@ import pytz
 
 from datetime import datetime
 
+from alppi.responses import ResponseHelper
+
 logger = logging.getLogger('django')
 
 
@@ -32,16 +34,13 @@ def get_user_group_info(pk_user) -> dict:
         
         message = 'Este usuario não contem grupos!'
         logger.error({'results': message})
-        return (None, JsonResponse({
-            'results': message,
-        }, status=status.HTTP_400_BAD_REQUEST))
+        return (None, ResponseHelper.HTTP_400({'results': message}))
+
 
     except Exception as error:
         message = 'Problemas do servidor buscar grupos do usuario.'
-        logger.info({'results': message})
-        logger.error(error)
-        return (None, JsonResponse(data={'results': message},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR))
+        logger.error({'results': message, 'error:': str(error)})
+        return (None, ResponseHelper.HTTP_500({'results': message, 'error:': str(error)}))
 
     finally:
         cursor.close()
