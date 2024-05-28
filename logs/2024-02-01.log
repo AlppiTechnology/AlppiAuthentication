@@ -1,4 +1,0 @@
-2024-02-01 21:40:24,922 autoreload 15776 6128 INFO Watching for file changes with StatReloader
-2024-02-01 22:19:48,220 autoreload 12624 10904 INFO Watching for file changes with StatReloader
-2024-02-01 22:19:51,263 basehttp 12624 15860 INFO "GET / HTTP/1.1" 200 10629
-2024-02-01 22:19:51,445 basehttp 12624 15860 INFO "GET /favicon.ico HTTP/1.1" 200 10629

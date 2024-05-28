@@ -1,0 +1,21 @@
+version: '3.9'
+
+services:
+  AlppiAuthentication :
+    container_name: authentication
+    image: alppiauthentication:v1.0.0
+    restart: always
+    ports:
+      - "7001:7001"
+    expose:
+      - "7001"
+    env_file:
+      - .env
+    networks:
+      network-service:
+        ipv4_address: 10.10.0.21
+
+networks:
+  network-service:
+    name: network-service
+    external: true
